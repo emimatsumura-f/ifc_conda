@@ -9,36 +9,18 @@ services:
         cmake \
         libboost-all-dev \
         python3-dev
-      # Condaのインストール
-      wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-      bash miniconda.sh -b -p /opt/conda
-      rm miniconda.sh
       
-      # Condaの初期化とPATHの設定
-      echo 'export PATH="/opt/conda/bin:$PATH"' >> $HOME/.bashrc
-      echo 'source /opt/conda/etc/profile.d/conda.sh' >> $HOME/.bashrc
-      source $HOME/.bashrc
-      
-      # Conda環境の作成と依存パッケージのインストール
-      conda init bash
-      source /opt/conda/etc/profile.d/conda.sh
-      conda env create -f environment.yml
-      conda activate ifc_converter
+      # Python環境のセットアップ
+      python -m venv .venv
+      . .venv/bin/activate
+      pip install --upgrade pip
+      pip install -r requirements.txt
     startCommand: |
-      # Condaの初期化とPATHの設定
-      source $HOME/.bashrc
-      source /opt/conda/etc/profile.d/conda.sh
-      conda activate ifc_converter
-      
-      # アプリケーションの起動
+      . .venv/bin/activate
       cd /opt/render/project/src && exec gunicorn "ifc_app:create_app()"
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.21
       - key: PYTHONPATH
         value: .
-      - key: CONDA_DIR
-        value: /opt/conda
-      - key: PATH
-        value: /opt/conda/bin:/opt/conda/condabin:${PATH}
     healthCheckPath: /
