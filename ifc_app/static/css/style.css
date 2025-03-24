@@ -107,6 +107,23 @@ h2 {
     color: rgba(255,255,255,1) !important;
 }
 
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    color: white;
+}
+
+.delete-form {
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
 /* レスポンシブ調整 */
 @media (max-width: 768px) {
     .container {

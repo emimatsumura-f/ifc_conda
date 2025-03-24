@@ -16,7 +16,7 @@ def create_app(test_config=None):
         MAX_BUFFER_SIZE=100 * 1024 * 1024  # アップロード用バッファサイズ
     )
 
-    # CSRF保護の設定
+    # CSRFプロテクションを初期化
     csrf = CSRFProtect()
     csrf.init_app(app)
 

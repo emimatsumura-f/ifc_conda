@@ -202,6 +202,37 @@ def history():
     ).fetchall()
     return render_template('history.html', uploads=uploads)
 
+@bp.route('/history/delete/<int:id>', methods=['POST'])
+@login_required
+def delete_history(id):
+    db = get_db()
+    # まず履歴レコードを取得
+    history = db.execute(
+        'SELECT * FROM conversion_history WHERE id = ? AND user_id = ?',
+        (id, current_user.id)
+    ).fetchone()
+    
+    if history is None:
+        flash('指定された履歴が見つかりません。', 'error')
+        return redirect(url_for('ifc.history'))
+
+    try:
+        # アップロードされたファイルを削除
+        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], history['filename'])
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+        # データベースから履歴を削除
+        db.execute('DELETE FROM conversion_history WHERE id = ? AND user_id = ?', (id, current_user.id))
+        db.commit()
+        flash('履歴とファイルを削除しました。')
+    except Exception as e:
+        db.rollback()
+        flash('削除中にエラーが発生しました。', 'error')
+        current_app.logger.error(f"Error deleting history: {str(e)}")
+    
+    return redirect(url_for('ifc.history'))
+
 @bp.route('/download_csv/<int:upload_id>')
 @login_required
 def download_csv(upload_id):
