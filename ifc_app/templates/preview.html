@@ -1,60 +1,65 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="preview-card">
-    <div class="preview-header">
+<div class="main-container">
+    <div class="header-area">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="mb-0">解析結果</h4>
             <form action="{{ url_for('ifc.download_csv', upload_id=upload.id) }}" method="get">
                 <button type="submit" class="btn btn-primary">CSVダウンロード</button>
             </form>
         </div>
-    </div>
-    <div class="preview-content">
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <table class="table">
-                    <tr>
-                        <th>ファイル名</th>
-                        <td>{{ upload.filename }}</td>
-                    </tr>
-                    <tr>
-                        <th>実行日時</th>
-                        <td>{{ upload.processed_date.strftime('%Y年%m月%d日 %H:%M:%S') }}</td>
-                    </tr>
-                    <tr>
-                        <th>ピース数</th>
-                        <td>{{ upload.element_count }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>部材種別</th>
-                        <th>部材名</th>
-                        <th>断面性能</th>
-                        <th>重量</th>
-                        <th>長さ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for element in elements %}
-                    <tr>
-                        <td>{{ element.type }}</td>
-                        <td>{{ element.name }}</td>
-                        <td>{{ element.size }}</td>
-                        <td>{{ element.weight }}</td>
-                        <td>{{ element.length }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
+        <div class="mt-3">
+            <table class="table table-sm">
+                <tr>
+                    <th>ファイル名</th>
+                    <td>{{ upload.filename }}</td>
+                </tr>
+                <tr>
+                    <th>実行日時</th>
+                    <td>{{ upload.processed_date.strftime('%Y年%m月%d日 %H:%M:%S') }}</td>
+                </tr>
+                <tr>
+                    <th>ピース数</th>
+                    <td>{{ upload.element_count }}</td>
+                </tr>
             </table>
         </div>
     </div>
-</div>
 
+    <div class="scroll-container">
+        <div class="content-wrapper">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>部材種別</th>
+                            <th>部材名</th>
+                            <th>断面性能</th>
+                            <th>重量</th>
+                            <th>長さ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for element in elements %}
+                        <tr>
+                            <td>{{ element.type }}</td>
+                            <td>{{ element.name }}</td>
+                            <td>{{ element.size }}</td>
+                            <td>{{ element.weight }}</td>
+                            <td>{{ element.length }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="text-muted">
+            &copy; 2025 IFC Converter
+        </div>
+    </div>
+</div>
 {% endblock %}

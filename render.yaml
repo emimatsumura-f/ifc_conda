@@ -9,13 +9,20 @@ services:
         cmake \
         libboost-all-dev \
         python3-dev
-      # Pythonパッケージのインストール
-      pip install --upgrade pip
-      pip install -r requirements.txt
-    startCommand: gunicorn "ifc_app:create_app()"
+      # Condaのインストール
+      wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+      bash miniconda.sh -b -p /opt/conda
+      rm miniconda.sh
+      export PATH="/opt/conda/bin:$PATH"
+      # Conda環境の作成と依存パッケージのインストール
+      conda env create -f environment.yml
+      conda activate ifc_converter
+    startCommand: conda run -n ifc_converter gunicorn "ifc_app:create_app()"
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.21
       - key: PYTHONPATH
         value: .
+      - key: PATH
+        value: /opt/conda/bin:${PATH}
     healthCheckPath: /
